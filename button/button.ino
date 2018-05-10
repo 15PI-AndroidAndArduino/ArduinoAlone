@@ -10,7 +10,9 @@ const int BUTTON2 = 3;
 const int LED3 = 9;
 const int BUTTON3 = 2;
 
-char ssid[] = SSID;     //  your network SSID (name) 
+int prevLed = 0;
+
+char ssid[] = name;     //  your network SSID (name) 
 char pass[] = password;    // your network password
 int status = WL_IDLE_STATUS;     // the Wifi radio's status
 WiFiServer server(80);
@@ -86,14 +88,21 @@ void loop() {
     digitalWrite(LED3, HIGH);
     LedToSend = LED3;
   }
-  Serial.println("sended");
-  Serial.println(LedToSend);
+  
   // listen for incoming clients
+  if(LedToSend != 0 && prevLed != LedToSend)
+  {
+    Serial.println(LedToSend);
+    server.write(LedToSend);
+  }
+  prevLed = LedToSend;
   if (client)
   {
     if (client.connected())
     {
-      server.write(LedToSend);
+      Serial.println("ooooo");
+      //server.write(LedToSend);
     }
   }
 }
+
